@@ -10,7 +10,6 @@ import com.empresa.brunolog.domain.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 	
-//	List<Cliente> queryByNome(String nome);
 	List<Cliente> findByNome(String nome);
 	List<Cliente> findByNomeContaining(String nome);
 
