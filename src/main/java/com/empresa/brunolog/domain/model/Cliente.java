@@ -14,7 +14,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-//@Table(name = "cliente") // mesmo nome não precisa
 public class Cliente {
 
 	@EqualsAndHashCode.Include
