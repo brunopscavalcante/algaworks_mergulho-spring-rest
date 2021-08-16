@@ -18,14 +18,19 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.empresa.brunolog.domain.model.Cliente;
+import com.empresa.brunolog.domain.model.service.ClienteService;
 import com.empresa.brunolog.domain.repository.ClienteRepository;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
 
-	@Autowired
 	private ClienteRepository clienteRepository;
+
+	private ClienteService clienteService;
 
 	@GetMapping()
 	public List<Cliente> listar() {
@@ -42,7 +47,7 @@ public class ClienteController {
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+		return clienteService.salvar(cliente);
 	}
 	
 	@PutMapping("/{clienteId}")
@@ -52,7 +57,7 @@ public class ClienteController {
 		}
 		
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
+		cliente = clienteService.salvar(cliente);
 		
 		return ResponseEntity.ok(cliente);
 	}
@@ -63,7 +68,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		clienteRepository.deleteById(clienteId);
+		clienteService.excluir(clienteId);
 		
 		return ResponseEntity.noContent().build();
 	}
