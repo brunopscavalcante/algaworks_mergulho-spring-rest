@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.empresa.brunolog.domain.model.exception.EntidadeNaoEncontradaException;
 import com.empresa.brunolog.domain.model.exception.NegocioException;
 
 @ControllerAdvice
@@ -42,6 +43,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 				"Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.", campos);
 		
 		return handleExceptionInternal(ex, problema, headers, status, request);
+	}
+	
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+	protected ResponseEntity<Object> handleNegocio(EntidadeNaoEncontradaException ex, WebRequest request) {
+		
+		HttpStatus status = HttpStatus.NOT_FOUND;
+		
+		Problema problema = new Problema(status.value(), OffsetDateTime.now(), ex.getMessage(), null);
+		
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
 	
 	@ExceptionHandler(NegocioException.class)

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.empresa.brunolog.domain.model.Cliente;
 import com.empresa.brunolog.domain.model.Entrega;
 import com.empresa.brunolog.domain.model.StatusEntrega;
+import com.empresa.brunolog.domain.model.exception.EntidadeNaoEncontradaException;
 import com.empresa.brunolog.domain.repository.EntregaRepository;
 
 import lombok.AllArgsConstructor;
@@ -29,6 +30,12 @@ public class EntregaService {
 		entrega.setDataPedido(OffsetDateTime.now());
 		
 		return entregaRepository.save(entrega);
+	}
+	
+	@Transactional
+	public Entrega buscar(Long entregaId) {
+		return entregaRepository.findById(entregaId)
+				.orElseThrow(() -> new EntidadeNaoEncontradaException("Entrega não encontrada"));
 	}
 	
 }
