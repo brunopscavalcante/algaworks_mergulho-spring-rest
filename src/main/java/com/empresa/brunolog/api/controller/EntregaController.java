@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.empresa.brunolog.domain.model.Entrega;
+import com.empresa.brunolog.api.assembler.EntregaAssembler;
+import com.empresa.brunolog.api.model.EntregaModel;
+import com.empresa.brunolog.api.model.input.EntregaInput;
 import com.empresa.brunolog.domain.model.service.EntregaService;
 import com.empresa.brunolog.domain.repository.EntregaRepository;
 
@@ -27,22 +29,23 @@ public class EntregaController {
 	
 	private EntregaRepository entregaRepository;
 	private EntregaService entregaService;
+	private EntregaAssembler entregaAssembler;
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Entrega solicitar(@Valid @RequestBody Entrega entrega) {
-		return entregaService.solicitar(entrega);
+	public EntregaModel solicitar(@Valid @RequestBody EntregaInput entregaInput) {
+		return entregaAssembler.toModel(entregaService.solicitar(entregaAssembler.toEntity(entregaInput)));
 	}
 
 	@GetMapping
-	public List<Entrega> listar() {
-		return entregaRepository.findAll();
+	public List<EntregaModel> listar() {
+		return entregaAssembler.toCollectionModel(entregaRepository.findAll());
 	}
 	
 	@GetMapping("/{entregaId}")
-	public ResponseEntity<Entrega> buscar(@PathVariable Long entregaId) {
+	public ResponseEntity<EntregaModel> buscar(@PathVariable Long entregaId) {
 		return entregaRepository.findById(entregaId)
-				.map(ResponseEntity::ok)
+				.map(entrega -> ResponseEntity.ok(entregaAssembler.toModel(entrega)))
 				.orElse(ResponseEntity.notFound().build());
 	}
 	
