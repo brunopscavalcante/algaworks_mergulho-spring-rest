@@ -1,6 +1,6 @@
 package com.empresa.brunolog.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			campos.add(new Problema.Campo(nome, mensagem));
 		}
 
-		Problema problema = new Problema(status.value(), LocalDateTime.now(),
+		Problema problema = new Problema(status.value(), OffsetDateTime.now(),
 				"Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.", campos);
 		
 		return handleExceptionInternal(ex, problema, headers, status, request);
@@ -49,7 +49,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		
-		Problema problema = new Problema(status.value(), LocalDateTime.now(), ex.getMessage(), null);
+		Problema problema = new Problema(status.value(), OffsetDateTime.now(), ex.getMessage(), null);
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
 	}
