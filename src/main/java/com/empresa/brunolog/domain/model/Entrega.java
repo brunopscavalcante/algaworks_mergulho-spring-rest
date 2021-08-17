@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.empresa.brunolog.domain.model.exception.NegocioException;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -57,6 +59,18 @@ public class Entrega {
 		
 		this.getOcorrencias().add(ocorrencia);
 		return ocorrencia;
+	}
+
+	public void finalizar() {
+		switch (this.getStatus()) {
+			case PENDENTE:
+				this.setStatus(StatusEntrega.FINALIZADA);
+				this.setDataFinalizacao(OffsetDateTime.now());
+				break;
+			
+			default:
+				throw new NegocioException("Entrega não pode ser finalizada");
+		}		
 	}
 	
 }
